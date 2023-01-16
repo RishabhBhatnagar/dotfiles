@@ -6,9 +6,10 @@ required_vars:
     cacheable: True
     from_cache: True
 
-alias:
-  global:
+global:
+  alias:
     d: diff
+    a: add
     cfg: config --global
     s: status
     c: commit -S --signoff
@@ -17,5 +18,7 @@ alias:
     cp: cherry pick
     lol: log --online
     lg: lol --decorate --graph --all
-    user.name: "{user_name}"
-    user.email: "{user_email}"
+    dc: d --cached
+  user:
+    name: "{user_name}"
+    email: "{user_email}"

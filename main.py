@@ -1,13 +1,12 @@
 import logging
 import os
 import pathlib
+from logging import getLogger
 
 import yaml
 
 from src import cache_manager
 from src import parser
-from logging import getLogger
-
 from src.utils import Constants
 
 logging.basicConfig(level=logging.DEBUG)

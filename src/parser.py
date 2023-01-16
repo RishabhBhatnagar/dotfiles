@@ -10,6 +10,7 @@ When we are given the config files,there are two types of statements:
                      new terminal instance.
 """
 import abc
+import logging
 import os.path
 
 import yaml
@@ -18,15 +19,7 @@ from src.utils import Platform, get_platform, Constants
 
 
 class Processor(abc.ABC):
-    def process_git_config(self, git_config):
-        pass
-
-    def process_shell_config(self, shell_config):
-        pass
-
-
-class WindowsProcessor(Processor):
-    def process_git_config(self, git_config):
+    def process_git_config(self, git_config: dict):
         pass
 
     def process_shell_config(self, shell_config):
@@ -34,8 +27,30 @@ class WindowsProcessor(Processor):
 
 
 class NixProcessor(Processor):
-    def process_git_config(self, get_config):
+    def process_git_config(self, git_config):
+        """
+        Git config is a one time run thing. Once set, it will stay as-is with
+        every new terminal instance
+        """
+
+        def _generate_git_stmts():
+            for scope, section_vars in git_config.items():
+                for section, git_alias in section_vars.items():
+                    for abbrev, cmd in git_alias.items():
+                        cmd = cmd.replace('"', '\\"')
+                        scope_option = '--' + scope if scope else ''
+                        yield f'git config {scope_option} {section}.{abbrev} "{cmd}"'
+
+        for stmt in _generate_git_stmts():
+            logging.debug(f'running: {stmt}')
+            os.system(stmt)
+
+    def process_shell_config(self, shell_config):
         pass
+
+
+class WindowsProcessor(Processor):
+    process_git_config = NixProcessor.process_git_config
 
     def process_shell_config(self, shell_config):
         pass
