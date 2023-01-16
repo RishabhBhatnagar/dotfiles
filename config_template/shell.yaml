@@ -1,7 +1,16 @@
 alias:
   g: git
-  cls: clear
+  q: exit
+
 
 windows:
   alias:
     clear: cls
+    poweroff: shutdown -f -s -t 0
+    reboot: shutdown -f -r -t 0
+
+nix:
+  alias:
+    cls: clear
+    :wq: exit
+    :q: :wq

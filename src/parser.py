@@ -22,7 +22,7 @@ class Processor(abc.ABC):
     def process_git_config(self, git_config: dict):
         pass
 
-    def process_shell_config(self, shell_config):
+    def process_shell_config(self, shell_config, out_dir):
         pass
 
 
@@ -32,7 +32,6 @@ class NixProcessor(Processor):
         Git config is a one time run thing. Once set, it will stay as-is with
         every new terminal instance
         """
-
         def _generate_git_stmts():
             for scope, section_vars in git_config.items():
                 for section, git_alias in section_vars.items():
@@ -45,15 +44,32 @@ class NixProcessor(Processor):
             logging.debug(f'running: {stmt}')
             os.system(stmt)
 
-    def process_shell_config(self, shell_config):
+    def process_shell_config(self, shell_config, out_dir):
         pass
 
 
 class WindowsProcessor(Processor):
     process_git_config = NixProcessor.process_git_config
 
-    def process_shell_config(self, shell_config):
-        pass
+    def process_shell_config(self, shell_config, out_dir):
+        def _get_win_specific_aliases(win_cfg):
+            win_cfg = shell_config.get('windows', {})
+            if not win_cfg or not win_cfg.get('alias'):
+                # nothing to be processed
+                logging.debug("got a null win alias config")
+                return {}
+            return win_cfg.get('alias')
+
+        general_aliases = shell_config.get('alias', {})
+        win_specific_aliases = _get_win_specific_aliases(shell_config)
+        all_aliases = general_aliases
+        all_aliases.update(win_specific_aliases)
+        for key, cmd in all_aliases.items():
+            with open(os.path.join(out_dir, key + '.bat'), 'w') as fh:
+                fh.write(cmd)
+        set_path_cmd = f'setx path "%PATH%;{out_dir}"'
+        logging.debug('adding out_dir to cmd using following command: ' + set_path_cmd)
+        os.system(set_path_cmd)
 
 
 class ProcessorFactory:
@@ -81,4 +97,4 @@ def parse_config_files(config_dir_path: str, out_dir: str):
         git_config = yaml.safe_load(fh.read())
 
     processor.process_git_config(git_config)
-    processor.process_shell_config(shell_config)
+    processor.process_shell_config(shell_config, out_dir)
