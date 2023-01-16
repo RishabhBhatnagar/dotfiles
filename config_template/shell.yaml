@@ -1,0 +1,7 @@
+alias:
+  g: git
+  cls: clear
+
+windows:
+  alias:
+    clear: cls
