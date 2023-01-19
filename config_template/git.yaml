@@ -16,7 +16,7 @@ global:
     reb: rebase -S --signoff
     rebi: reb -i
     cp: cherry pick
-    lol: log --online
+    lol: log --oneline
     lg: lol --decorate --graph --all
     dc: d --cached
   user:
