@@ -11,6 +11,7 @@ class Constants:
     FIELD_NAME_out_dir = 'out_dir'
     FIELD_NAME_platform_windows = 'windows'
     FIELD_NAME_rc_path = 'rc_path'
+    FIELD_NAME_repo_path = 'repository_path'
 
     PATH_INPUT_config_dir_name = 'config_template'
     PATH_OUTPUT_config_dir_name = 'config'

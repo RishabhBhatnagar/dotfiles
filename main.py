@@ -136,6 +136,11 @@ def main():
     out_dir = setup_new(curr_dir_path)
     parser.parse_config_files(config_dir_path=_get_out_config_path(out_dir), out_dir=out_dir)
     logger.info("parsed the config files successfully")
+    cache_manager.write_to_cache(
+        Constants.FIELD_NAME_repo_path,
+        curr_dir_path,
+        _get_cache_file_path(out_dir)
+    )
 
 
 if __name__ == '__main__':
