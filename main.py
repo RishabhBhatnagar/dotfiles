@@ -68,7 +68,7 @@ def fix_path(path, base_path=None):
 
 def get_out_dir(from_cache=True, cache_file_path=None, base_path=None):
     if from_cache and cache_file_path is not None:
-        return fix_path(read_cache(cache_file_path)[Constants.FIELD_NAME_out_dir], base_path)
+        return fix_path(cache_manager.read_cache(cache_file_path)[Constants.FIELD_NAME_out_dir], base_path)
 
     out_dir = get_requirement(
         Constants.FIELD_NAME_out_dir,
