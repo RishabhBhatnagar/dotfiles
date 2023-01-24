@@ -18,6 +18,7 @@ windows:
     reboot: shutdown -f -r -t 0
     # Aliases Provided For User's Convenience
     .refresh: python "{repository_path}/refresh.py" "{out_dir}"
+    .update: python "{repository_path}/update.py" "{out_dir}"
 
 nix:
   alias:
@@ -26,3 +27,4 @@ nix:
     :q: :wq
     # Aliases Provided For User's Convenience
     .refresh: python3 "{repository_path}/refresh.py" "{out_dir}"
+    .update: python3 "{repository_path}/update.py" "{out_dir}"
