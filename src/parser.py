@@ -178,8 +178,6 @@ def parse_config_files(config_dir_path: str, out_dir: str):
 
     with open(os.path.join(config_dir_path,
                            Constants.PATH_OUTPUT_git_config_fname)) as fh:
-        print(os.path.join(config_dir_path,
-                           Constants.PATH_OUTPUT_git_config_fname))
         git_config = yaml.safe_load(fh.read())
 
     processor.process_git_config(git_config)
