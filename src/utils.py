@@ -1,7 +1,10 @@
 import enum
+import os
 import platform
 from functools import reduce
 from typing import Iterable
+
+from src import cache_manager
 
 
 class Constants:
@@ -54,3 +57,25 @@ def _set_mode(text: str, mode: TextMode):
 
 def format_text(modes: Iterable[TextMode], text: str) -> str:
     return reduce(_set_mode, modes, text)
+
+
+def get_cache_file_path(out_dir):
+    return os.path.join(out_dir, Constants.PATH_OUTPUT_cache_file_name)
+
+
+def get_out_config_path(out_dir_path):
+    return os.path.join(out_dir_path, Constants.PATH_OUTPUT_config_dir_name)
+
+
+def get_in_config_path(repo_path):
+    return os.path.join(repo_path, Constants.PATH_INPUT_config_dir_name)
+
+
+def get_requirement(key, description, cacheable, from_cache, out_dir):
+    if from_cache and key in (
+            cache := cache_manager.read_cache(get_cache_file_path(out_dir))):
+        return cache[key]
+    val = input(f"Please enter {description}: ")
+    if cacheable:
+        cache_manager.write_to_cache(key, val, get_cache_file_path(out_dir))
+    return val

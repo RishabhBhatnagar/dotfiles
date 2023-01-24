@@ -16,8 +16,8 @@ import pathlib
 
 import yaml
 
-from main import get_requirement
-from src.utils import Platform, get_platform, Constants, TextMode, format_text
+from src.utils import Platform, get_platform, Constants, TextMode, \
+    format_text, get_requirement
 
 
 class Processor(abc.ABC):
@@ -67,8 +67,11 @@ class NixProcessor(Processor):
                     return None
 
                 # confirm from user if the detected rc file path is correct
-                print(format_text([TextMode.BOLD], detected_path), 'is the detected path of rc file')
-                choice = get_requirement('confirmation_rc_path', 'y if you want to change the rc file path (any other key to continue)', False, False, out_dir)
+                print(format_text([TextMode.BOLD], detected_path),
+                      'is the detected path of rc file')
+                choice = get_requirement('confirmation_rc_path',
+                                         'y if you want to change the rc file path (any other key to continue)',
+                                         False, False, out_dir)
                 if choice.lower() == 'y':
                     return None
                 return detected_path
@@ -165,6 +168,8 @@ def parse_config_files(config_dir_path: str, out_dir: str):
 
     with open(os.path.join(config_dir_path,
                            Constants.PATH_OUTPUT_git_config_fname)) as fh:
+        print(os.path.join(config_dir_path,
+                           Constants.PATH_OUTPUT_git_config_fname))
         git_config = yaml.safe_load(fh.read())
 
     processor.process_git_config(git_config)

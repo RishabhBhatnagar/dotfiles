@@ -1,7 +1,18 @@
+required_vars:
+  repository_path:
+    from_cache: True
+    description: Path where the code is checked out
+  out_dir:
+    from_cache: True
+    description: Path where all thee output files will be stored
+
+
 alias:
   g: git
   q: exit
 
+  # Aliases Provided For User's Convenience
+  .refresh: python3 "{repository_path}/refresh.py" "{out_dir}"
 
 windows:
   alias:
