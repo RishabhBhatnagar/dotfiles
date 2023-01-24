@@ -2,10 +2,9 @@ import os.path
 import pathlib
 import sys
 
-from __main__ import create_config_files
 from src import cache_manager, parser
 from src.utils import get_cache_file_path, get_in_config_path, \
-    get_out_config_path, Constants
+    get_out_config_path, Constants, create_config_files
 
 
 def main():

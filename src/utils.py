@@ -1,8 +1,11 @@
 import enum
 import os
+import pathlib
 import platform
 from functools import reduce
 from typing import Iterable
+
+import yaml
 
 from src import cache_manager
 
@@ -79,3 +82,57 @@ def get_requirement(key, description, cacheable, from_cache, out_dir):
     if cacheable:
         cache_manager.write_to_cache(key, val, get_cache_file_path(out_dir))
     return val
+
+
+def fetch_requirements(requirement_config: dict, out_dir):
+    out = {}
+    for key, requirement in requirement_config.items():
+        out[key] = get_requirement(key, requirement['description'],
+                                   requirement.get('cacheable'),
+                                   requirement.get('from_cache'), out_dir)
+    return out
+
+
+def format_requirements(yaml_config: dict, requirements: dict) -> str:
+    """
+    Given a yaml config, fill unfilled keys with values with the details
+    provided by the requirements dict
+    """
+    dup_yaml_config = yaml_config.copy()
+    dup_yaml_config.pop(Constants.FIELD_NAME_required_vars, None)
+    return yaml.safe_dump(dup_yaml_config).format(**requirements)
+
+
+def parse_config_file_content(file_content: str, out_dir) -> str:
+    config = yaml.safe_load(file_content)
+    required_vars: dict = config.get(Constants.FIELD_NAME_required_vars, {})
+    req = fetch_requirements(required_vars, out_dir)
+    return format_requirements(config, req)
+
+
+def create_config_files(config_input_dir, config_output_dir, out_dir_path):
+    """
+    config_input_dir: directory path where all the input config template files are stored
+    config_output_dir: directory path where all the filled config files will be stored
+    out_dir_path: working directory path where all the out files can be written by the program
+    """
+
+    def _get_config_fnames(dir_path):
+        """All the yaml in the config directory path are the config files"""
+        return filter(lambda fname: fname.endswith('.yaml'),
+                      os.listdir(dir_path))
+
+    pathlib.Path(config_output_dir).mkdir(exist_ok=True)
+
+    for file_name in _get_config_fnames(config_input_dir):
+        config_in_file_path = os.path.join(config_input_dir, file_name)
+        config_out_file_path = os.path.join(config_output_dir, file_name)
+
+        # reading the config file and filling the required params
+        with open(config_in_file_path) as fh:
+            parsed_file_content = parse_config_file_content(fh.read(),
+                                                            out_dir_path.__str__())
+
+        # (?over)writing the parsed content to the output directory
+        with open(config_out_file_path, 'w') as fh:
+            fh.write(parsed_file_content)
