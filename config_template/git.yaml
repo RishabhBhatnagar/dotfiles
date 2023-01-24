@@ -1,6 +1,8 @@
 required_vars:
   user_name:
     description: your name to be used with git
+    cacheable: True
+    from_cache: True
   user_email:
     description: your email id
     cacheable: True
