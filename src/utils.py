@@ -31,9 +31,9 @@ class Constants:
 
 
 class Platform(enum.Enum):
-    Windows = enum.auto()
-    Linux = enum.auto()
-    Mac = enum.auto()
+    Windows = 'windows'
+    Linux = 'nix'
+    Mac = 'mac'
 
 
 def get_platform():
@@ -100,7 +100,19 @@ def format_requirements(yaml_config: dict, requirements: dict) -> str:
     """
     dup_yaml_config = yaml_config.copy()
     dup_yaml_config.pop(Constants.FIELD_NAME_required_vars, None)
+    _filter_yaml_config(dup_yaml_config)
     return yaml.safe_dump(dup_yaml_config).format(**requirements)
+
+
+def _filter_yaml_config(yaml_config: dict):
+    # filter the yaml config to have settings pertaining to the current OS only
+    curr_platform = get_platform()
+    other_platforms = [p for p in Platform if p != curr_platform]
+    nix_platforms = {Platform.Linux, Platform.Mac}
+    if curr_platform in nix_platforms:
+        other_platforms = [p for p in other_platforms if p not in nix_platforms]
+    for p in other_platforms:
+        yaml_config.pop(p.value, None)
 
 
 def parse_config_file_content(file_content: str, out_dir) -> str:
