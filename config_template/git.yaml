@@ -19,6 +19,9 @@ global:
     lol: log --oneline
     lg: lol --decorate --graph --all
     dc: d --cached
+    ca: c --amend
+    cane: ca --no-edit
+    p: push
   user:
     name: "{user_name}"
     email: "{user_email}"
