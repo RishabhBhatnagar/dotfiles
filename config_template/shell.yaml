@@ -11,17 +11,18 @@ alias:
   g: git
   q: exit
 
-  # Aliases Provided For User's Convenience
-  .refresh: python3 "{repository_path}/refresh.py" "{out_dir}"
-
 windows:
   alias:
     clear: cls
     poweroff: shutdown -f -s -t 0
     reboot: shutdown -f -r -t 0
+    # Aliases Provided For User's Convenience
+    .refresh: python "{repository_path}/refresh.py" "{out_dir}"
 
 nix:
   alias:
     cls: clear
     :wq: exit
     :q: :wq
+    # Aliases Provided For User's Convenience
+    .refresh: python3 "{repository_path}/refresh.py" "{out_dir}"
