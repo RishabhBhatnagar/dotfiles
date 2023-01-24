@@ -55,6 +55,16 @@ class NixProcessor(Processor):
 
         def _add_file_to_rc(cmd):
             def _detect_rc_file():
+                # Try to retrieve rc filepath wrt the current shell
+                if (shell_fpath := os.environ['SHELL']) is not None and \
+                        os.path.exists(
+                            rc_fpath := os.path.join(
+                                os.path.expanduser('~'),
+                                f'.{os.path.basename(shell_fpath)}rc'
+                            )
+                        ):
+                    return rc_fpath
+
                 home_dir = pathlib.Path('~').expanduser()
                 rc_file_names = Constants.POSSIBLE_RC_FILENAMES
                 detected_path = None
