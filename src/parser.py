@@ -36,9 +36,18 @@ class NixProcessor(Processor):
         """
 
         def _generate_git_stmts():
+            if not git_config:
+                return None
             for scope, section_vars in git_config.items():
-                for section, git_alias in section_vars.items():
-                    for abbrev, cmd in git_alias.items():
+                if section_vars is None:
+                    continue
+                for section, git_action in section_vars.items():
+                    if git_action is None:
+                        continue
+                    for abbrev, cmd in git_action.items():
+                        if cmd is None:
+                            logging.error(f"missing definition for {scope}'s {section}.{abbrev}")
+                            continue
                         cmd = cmd.replace('"', '\\"')
                         scope_option = '--' + scope if scope else ''
                         yield f'git config {scope_option} {section}.{abbrev} "{cmd}"'

@@ -118,7 +118,10 @@ def _filter_yaml_config(yaml_config: dict):
 def parse_config_file_content(file_content: str, out_dir) -> str:
     config = yaml.safe_load(file_content)
     required_vars: dict = config.get(Constants.FIELD_NAME_required_vars, {})
-    req = fetch_requirements(required_vars, out_dir)
+    if required_vars is None:
+        req = {}
+    else:
+        req = fetch_requirements(required_vars, out_dir)
     return format_requirements(config, req)
 
 
