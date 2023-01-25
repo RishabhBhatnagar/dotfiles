@@ -117,6 +117,8 @@ def _filter_yaml_config(yaml_config: dict):
 
 def parse_config_file_content(file_content: str, out_dir) -> str:
     config = yaml.safe_load(file_content)
+    if not config:
+        return ""
     required_vars: dict = config.get(Constants.FIELD_NAME_required_vars, {})
     if required_vars is None:
         req = {}
