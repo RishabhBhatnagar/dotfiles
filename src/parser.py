@@ -61,6 +61,11 @@ class NixProcessor(Processor):
             for abbr, cmd in all_aliases.items():
                 cmd = cmd.replace('"', '\\"')
                 yield f'alias {abbr}="{cmd}"'
+            if not nix_alias:
+                return None
+            assert isinstance(nix_alias, dict)
+            for env_key, env_value in nix_env.items():
+                yield f'export {env_key}={env_value}'
 
         def _add_file_to_rc(cmd):
             def _detect_rc_file():
@@ -122,6 +127,7 @@ class NixProcessor(Processor):
 
         general_alias = shell_config.get('alias', {})
         nix_alias = shell_config.get('nix', {}).get('alias', {})
+        nix_env = shell_config.get('nix', {}).get('env', {})
         all_aliases = {**general_alias, **nix_alias}
 
         out_file_path = os.path.join(out_dir, Constants.PATH_OUTPUT_main_config)
