@@ -14,18 +14,28 @@ global:
     a: add
     cfg: config --global
     s: status
+    sh: show
     c: commit -S --signoff
     reb: rebase -S --signoff
     rebi: reb -i
-    cp: cherry pick
+    cp: cherry-pick
     lol: log --oneline
     lg: lol --decorate --graph --all
     dc: d --cached
+    cd: d HEAD~1..HEAD
     ca: c --amend
     cane: ca --no-edit
     p: push
     st: stash
     rr: remote --rename
+    ch: checkout
+    b: branch
+    cb: b --show-current
+    au: update-index --assume-unchanged
+    nau: update-index --no-assume-unchanged
+    vc: verify-commit
   user:
     name: "{user_name}"
     email: "{user_email}"
+  core:
+    editor: vim
