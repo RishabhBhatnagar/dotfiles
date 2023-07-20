@@ -28,5 +28,6 @@ nix:
     # Aliases Provided For User's Convenience
     .refresh: python3 "{repository_path}/refresh.py" "{out_dir}"
     .update: python3 "{repository_path}/update.py" "{out_dir}"
+    ..: . ~/.bashrc
   env:
     GOPATH: "$HOME/go"
