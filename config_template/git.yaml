@@ -18,7 +18,7 @@ global:
     c: commit -S --signoff
     reb: rebase -S --signoff
     rebi: reb -i
-    cp: cherry-pick
+    cp: cherry-pick -S --signoff
     lol: log --oneline
     lg: lol --decorate --graph --all
     dc: d --cached
@@ -27,7 +27,7 @@ global:
     cane: ca --no-edit
     p: push
     st: stash
-    rr: remote --rename
+    rr: remote rename
     ch: checkout
     b: branch
     cb: b --show-current
